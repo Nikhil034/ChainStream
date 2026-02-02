@@ -1,11 +1,13 @@
 import { http, createConfig, injected } from 'wagmi'
-import { arbitrumSepolia, baseSepolia } from 'wagmi/chains'
+import { arbitrumSepolia, baseSepolia, sepolia } from 'wagmi/chains'
 import { defineChain } from 'viem'
 
+// Arc Testnet - CRITICAL: USDC is the native currency on Arc (not ETH!)
 export const arcTestnet = defineChain({
   id: 5042002,
   name: 'Arc Testnet',
-  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  // USDC is used as gas on Arc Network (6 decimals, not 18)
+  nativeCurrency: { name: 'USDC', symbol: 'USDC', decimals: 6 },
   rpcUrls: {
     default: { http: ['https://rpc.testnet.arc.network'] },
   },
@@ -16,11 +18,12 @@ export const arcTestnet = defineChain({
 })
 
 export const config = createConfig({
-  chains: [arcTestnet,arbitrumSepolia, baseSepolia],
-   connectors: [
+  chains: [sepolia, arcTestnet, arbitrumSepolia, baseSepolia],
+  connectors: [
     injected(), // uses window.ethereum directly
   ],
   transports: {
+    [sepolia.id]: http(),
     [arcTestnet.id]: http(),
     [arbitrumSepolia.id]: http(),
     [baseSepolia.id]: http(),
