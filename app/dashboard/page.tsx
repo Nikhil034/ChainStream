@@ -61,32 +61,6 @@ export default function DashboardPage() {
                     <TransactionHistory />
                 </div>
 
-                {/* Info Footer */}
-                <div className="mt-8 p-6 bg-slate-900/50 rounded-xl border border-slate-800">
-                    <div className="flex items-start gap-4">
-                        <span className="text-3xl">💡</span>
-                        <div>
-                            <h3 className="text-white font-semibold mb-2">Real DAO Treasury Automation</h3>
-                            <div className="text-slate-400 text-sm space-y-2">
-                                <p>
-                                    <span className="text-white font-semibold">1. Real Services:</span> Alchemy API ($49/mo), The Graph (usage-based), contributor payments ($2.5k each), grants, audit services
-                                </p>
-                                <p>
-                                    <span className="text-white font-semibold">2. Threshold Trigger:</span> When costs hit ${PAYMENT_THRESHOLD}, agent analyzes routes from all chains to find cheapest path
-                                </p>
-                                <p>
-                                    <span className="text-white font-semibold">3. Cost Savings:</span> 10-40% savings on cross-chain fees (Base route typically cheapest)
-                                </p>
-                                <p>
-                                    <span className="text-white font-semibold">4. Real Payments:</span> Execute actual Arc testnet transactions - verify on Arc Explorer!
-                                </p>
-                                <p className="text-emerald-400 font-semibold mt-3">
-                                    ✅ Real-world example: Medium DeFi DAO spends ~$28k/month. ChainStream automates payments and saves $500-1,500/month.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     );
