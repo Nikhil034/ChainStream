@@ -8,6 +8,7 @@ import { TransactionHistory } from '../../components/TransactionHistory';
 import { UnifiedRoute } from '../../lib/lifi';
 import { resetServiceUsage } from '../../lib/services';
 import { PAYMENT_THRESHOLD } from '../../lib/constants';
+import { BalanceTicker } from '../../components/BalanceTicker';
 
 export default function DashboardPage() {
     const [totalCost, setTotalCost] = useState(0);
@@ -23,8 +24,9 @@ export default function DashboardPage() {
     };
 
     return (
-        <div className="min-h-screen bg-zinc-950 p-6">
-            <div className="max-w-7xl mx-auto">
+        <div className="min-h-screen bg-zinc-950">
+            <BalanceTicker />
+            <div className="max-w-7xl mx-auto p-6">
                 {/* Header */}
                 <div className="mb-8">
                     <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 mb-2">
@@ -55,6 +57,8 @@ export default function DashboardPage() {
                         onPaymentComplete={handlePaymentComplete}
                         onRoutesAnalyzed={setRoutes}
                         onRouteSelected={setSelectedRoute}
+                        selectedRoute={selectedRoute}
+                        routes={routes}
                     />
 
                     {/* Bottom Right: Transaction History */}

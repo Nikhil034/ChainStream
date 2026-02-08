@@ -13,15 +13,29 @@ interface PaymentAgentProps {
     onPaymentComplete: () => void;
     onRoutesAnalyzed?: (routes: UnifiedRoute[]) => void;
     onRouteSelected?: (route: UnifiedRoute | null) => void;
+    selectedRoute?: UnifiedRoute | null;
+    routes?: UnifiedRoute[];
 }
 
-export function PaymentAgent({ totalCost, onPaymentComplete, onRoutesAnalyzed, onRouteSelected }: PaymentAgentProps) {
+export function PaymentAgent({
+    totalCost,
+    onPaymentComplete,
+    onRoutesAnalyzed,
+    onRouteSelected,
+    selectedRoute: externalSelectedRoute,
+    routes: externalRoutes
+}: PaymentAgentProps) {
     const { address } = useAccount();
     const balances = useMultiChainBalances(address);
     const { sendUSDC, hash, isPending, isConfirming, isConfirmed, explorerUrl } = useSendToArc();
 
-    const [routes, setRoutes] = useState<UnifiedRoute[]>([]);
-    const [selectedRoute, setSelectedRoute] = useState<UnifiedRoute | null>(null);
+    const [internalRoutes, setInternalRoutes] = useState<UnifiedRoute[]>([]);
+    const [internalSelectedRoute, setInternalSelectedRoute] = useState<UnifiedRoute | null>(null);
+
+    // Use external props if available, otherwise fallback to internal state
+    const routes = externalRoutes?.length ? externalRoutes : internalRoutes;
+    const selectedRoute = externalSelectedRoute !== undefined ? externalSelectedRoute : internalSelectedRoute;
+
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [currentTxId, setCurrentTxId] = useState<string | null>(null);
 
@@ -52,10 +66,10 @@ export function PaymentAgent({ totalCost, onPaymentComplete, onRoutesAnalyzed, o
 
             const comparedRoutes = await compareRoutesToArc(totalCost, address, balanceNumbers);
             console.log('Routes analyzed:', comparedRoutes);
-            setRoutes(comparedRoutes);
+            setInternalRoutes(comparedRoutes);
             onRoutesAnalyzed?.(comparedRoutes);
             if (comparedRoutes.length > 0) {
-                setSelectedRoute(comparedRoutes[0]); // Auto-select cheapest
+                setInternalSelectedRoute(comparedRoutes[0]); // Auto-select cheapest
                 onRouteSelected?.(comparedRoutes[0]);
             }
         } catch (error) {
@@ -95,8 +109,8 @@ export function PaymentAgent({ totalCost, onPaymentComplete, onRoutesAnalyzed, o
             await sendUSDC(recipientAddress, selectedRoute.fromAmount);
 
             // Payment complete, reset state
-            setRoutes([]);
-            setSelectedRoute(null);
+            setInternalRoutes([]);
+            setInternalSelectedRoute(null);
             onPaymentComplete();
         } catch (error) {
             console.error('Payment execution error:', error);
